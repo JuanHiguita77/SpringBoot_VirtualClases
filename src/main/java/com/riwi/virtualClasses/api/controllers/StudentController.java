@@ -38,4 +38,10 @@ public class StudentController {
         return this.studentService.create(studentReq);
     }
 
+
+    @PatchMapping("/{id}/disable")
+    public StudentResp disable(@PathVariable Long id) {
+        studentService.delete(id);
+        return this.studentService.get(id);
+    }
 }
