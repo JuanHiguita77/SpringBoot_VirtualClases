@@ -8,6 +8,7 @@ import com.riwi.virtualClasses.domain.entities.Student;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    Page<Student> findByNameContainingAndActiveTrue(String name, Pageable pageable);
-
+    Page<Student> findByNameContainingAndActiveTrueOrDescriptionContainingAndActiveTrue(String name, String description, Pageable pageable);
+    
+    Page<Student> findByActiveTrue(Pageable pagination);
 }
