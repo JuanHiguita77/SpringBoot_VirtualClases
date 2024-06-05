@@ -44,6 +44,21 @@ public class StudentService implements IStudentService {
         return this.entityToResp(this.find(id));
     }
 
+    @Override
+    public StudentResp update(StudentReq request, Long id) {
+        Student student = this.find(id);
+        student = this.requestToEntity(request);
+        student.setId(id);
+
+        return this.entityToResp(this.studentRepository.save(student));
+    }
+
+    @Override
+    public void delete(Long id) {
+        Student student = this.find(id);
+        student.setActive(false);
+        this.studentRepository.save(student);
+    }
 
     @Override
     public Page<StudentResp> getAll(int page, int size, SortType sortType) {
@@ -58,7 +73,6 @@ public class StudentService implements IStudentService {
         return this.studentRepository.findAll(pagination).map(this::entityToResp);
     }
 
-    @Override
     public Page<StudentResp> searchByName(String name, int page, int size) {
         PageRequest pagination = PageRequest.of(page, size, Sort.by(FIELD_BY_SORT));
         return this.studentRepository.findByNameContainingAndActiveTrue(name, pagination).map(this::entityToResp);
@@ -76,7 +90,7 @@ public class StudentService implements IStudentService {
     }
 
     private Student requestToEntity(StudentReq studentReq) {
-        Class class = this.classRepository.findById(studentReq.getClassId()).orElseThrow(() -> new BadRequestException("No Class found with the supplied ID"));;
+        Class class = this.classRepository.findById(studentReq.getClassId()).orElseThrow(() -> new BadRequestException("No student found with the supplied ID"));;
 
         return Student.builder()
                 .name(studentReq.getName())

@@ -38,6 +38,10 @@ public class StudentController {
         return this.studentService.create(studentReq);
     }
 
+    @PutMapping("/{id}")
+    public StudentResp update(@PathVariable Long id, @RequestBody StudentReq studentReq) {
+        return this.studentService.update(studentReq, id);
+    }
 
     @PatchMapping("/{id}/disable")
     public StudentResp disable(@PathVariable Long id) {
