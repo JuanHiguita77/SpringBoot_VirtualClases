@@ -33,5 +33,9 @@ public class StudentController {
         return this.studentService.get(id);
     }
 
+    @PostMapping
+    public StudentResp create(@RequestBody StudentReq studentReq) {
+        return this.studentService.create(studentReq);
+    }
 
 }
