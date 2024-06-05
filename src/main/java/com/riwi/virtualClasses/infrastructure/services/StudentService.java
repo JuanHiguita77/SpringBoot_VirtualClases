@@ -60,7 +60,7 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public Page<StudentResp> getAll(String name, String description, int page, int size, SortType sortType) {
+    public Page<StudentResp> getAll(String name, int page, int size, SortType sortType) {
         if (page < 0) page = 0;
 
         PageRequest pagination = switch (sortType) {
@@ -70,10 +70,10 @@ public class StudentService implements IStudentService {
         };
 
         Page<Student> studentPage;
-        if ((name == null || name.isBlank()) && (description == null || description.isBlank())) {
+        if ((name == null || name.isBlank())) {
             studentPage = studentRepository.findByActiveTrue(pagination);
         } else {
-            studentPage = studentRepository.findByNameContainingAndActiveTrueOrDescriptionContainingAndActiveTrue(name, description, pagination);
+            studentPage = studentRepository.findByNameContainingAndActiveTrue(name, pagination);
         }
 
         return studentPage.map(this::entityToResp);    

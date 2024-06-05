@@ -10,5 +10,5 @@ import com.riwi.virtualClasses.utils.enums.SortType;
 public interface IStudentService extends CrudService<StudentReq, StudentResp, Long> {
     public String FIELD_BY_SORT = "name";
 
-    Page<StudentResp> getAll(String name, String description, int page, int size, SortType sortType);
+    Page<StudentResp> getAll(String name, int page, int size, SortType sortType);
 }
