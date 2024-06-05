@@ -33,16 +33,17 @@ public class StudentService implements IStudentService {
     @Autowired
     private final ClassRepository classRepository;
 
-
+    @Override
+    public StudentResp create(StudentReq request) {
+        Student student = this.requestToEntity(request);
+        return this.entityToResp(this.studentRepository.save(student));
+    }
 
     @Override
     public StudentResp get(Long id) {
         return this.entityToResp(this.find(id));
     }
 
-
-
-  
 
     @Override
     public Page<StudentResp> getAll(int page, int size, SortType sortType) {
