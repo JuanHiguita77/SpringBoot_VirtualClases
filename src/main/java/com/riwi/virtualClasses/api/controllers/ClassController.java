@@ -32,9 +32,12 @@ public class ClassController {
     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResp.class)))
     @GetMapping
     public ResponseEntity<Page<ClassResp>> getAllClasses(@RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "10") int size,
-                                                         @RequestParam(required = false) SortType sortype) {
-        return ResponseEntity.ok(this.classService.getAll(page, size, sortype));
+    @RequestParam(defaultValue = "5") int size,
+    @RequestParam(defaultValue = "NONE") SortType sortType,
+    @RequestParam(required = false) String name,
+    @RequestParam(required = false) String description) 
+    {
+        return ResponseEntity.ok(this.classService.getAll(page, size, sortType, name, description));
     }
 
     @Operation(summary = "Get class information", description = "Endpoint to get detailed information of a specific class by ID")
