@@ -33,12 +33,18 @@ public class LessonController {
         return ResponseEntity.ok(this.lessonService.create(request));
     }
 
+    @Operation(summary = "Get lesson information", description = "Endpoint to get detailed information of a specific lesson by ID")
+    @ApiResponse(responseCode = "400", description = "Invalid lesson ID", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResp.class)))
+    @GetMapping("/{id}/multimedia")
+    public ResponseEntity<LessonResp> getLessonInfo(@PathVariable("id") Long lessonId) {
+        return ResponseEntity.ok(this.lessonService.get(lessonId));
+    }
 
     @Operation(summary = "Disable a lesson", description = "Endpoint to disable a lesson by ID")
     @ApiResponse(responseCode = "400", description = "Invalid lesson ID", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResp.class)))
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}/disable")
     public ResponseEntity<Void> disableLesson(@PathVariable("id") Long lessonId) {
-        this.lessonService.disable(lessonId);
+        this.lessonService.delete(lessonId);
         return ResponseEntity.noContent().build();
     }
 }
