@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -83,7 +84,7 @@ public class ClassService implements IClassService {
             .description(entity.getDescription())
             .createdAt(entity.getCreatedAt())
             .active(entity.getActive())
-            .students(entity.getStudents().stream().map(this::studentEntityToResp).toList())
+            .students(entity.getStudents() != null ? entity.getStudents().stream().map(this::studentEntityToResp).toList() : List.of())
             .build();
     }
 
@@ -94,8 +95,8 @@ public class ClassService implements IClassService {
             .description(entity.getDescription())
             .createdAt(entity.getCreatedAt())
             .active(entity.getActive())
-            .students(entity.getStudents().stream().map(this::studentEntityToResp).toList())
-            .lessons(entity.getLessons().stream().map(this::lessonEntityToResp).toList())
+            .students(entity.getStudents() != null ? entity.getStudents().stream().map(this::studentEntityToResp).toList() : List.of())
+            .lessons(entity.getLessons() != null ? entity.getLessons().stream().map(this::lessonEntityToResp).toList() : List.of())
             .build();
     }
 

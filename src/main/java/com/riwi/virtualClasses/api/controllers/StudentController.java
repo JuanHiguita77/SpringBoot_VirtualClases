@@ -29,12 +29,12 @@ public class StudentController {
     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResp.class)))
     @GetMapping
     public ResponseEntity<Page<StudentResp>> getAll(
-            @RequestParam int page,
-            @RequestParam int size,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "2") int size,
             @RequestParam(required = false) SortType sort,
             @RequestParam(required = false) String name) 
             {
-        return ResponseEntity.ok(studentService.getAll(name, page, size, sort != null ? sort : SortType.NONE));
+        return ResponseEntity.ok(studentService.getAll(name, page - 1, size, sort != null ? sort : SortType.NONE));
     }
 
     @Operation(summary = "Get student by ID", description = "Endpoint to get a specific student by their ID")
