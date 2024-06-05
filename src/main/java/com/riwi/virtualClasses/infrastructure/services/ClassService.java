@@ -34,12 +34,12 @@ public class ClassService implements IClassService {
     @Override
     public ClassResp create(ClassReq request) {
         Class newClass = this.requestToEntity(request);
-        return this.entityToResp(this.classRepository.save(newClass));
+        return this.entityToFullClassResp(this.classRepository.save(newClass));
     }
 
     @Override
     public ClassResp get(Long id) {
-        return this.entityToResp(this.find(id));
+        return this.entityToStudentsClassResp(this.find(id));
     }
 
     @Override
@@ -67,16 +67,36 @@ public class ClassService implements IClassService {
     }
 
     private ClassResp entityToResp(Class entity) {
-        // Implementar la conversión de entity a ClassResp
         return ClassResp.builder()
-                .classId(entity.getId())
-                .name(entity.getName())
-                .description(entity.getDescription())
-                .createdAt(entity.getCreatedAt())
-                .active(entity.getActive())
-                .students(entity.getStudents().stream().map(this::studentEntityToResp).toList())
-                .lessons(entity.getLessons().stream().map(this::lessonEntityToResp).toList())
-                .build();
+            .classId(entity.getId())
+            .name(entity.getName())
+            .description(entity.getDescription())
+            .createdAt(entity.getCreatedAt())
+            .active(entity.getActive())
+            .build();
+    }
+
+    private ClassResp entityToStudentsClassResp(Class entity) {
+        return ClassResp.builder()
+            .classId(entity.getId())
+            .name(entity.getName())
+            .description(entity.getDescription())
+            .createdAt(entity.getCreatedAt())
+            .active(entity.getActive())
+            .students(entity.getStudents().stream().map(this::studentEntityToResp).toList())
+            .build();
+    }
+
+    private ClassResp entityToFullClassResp(Class entity) {
+        return ClassResp.builder()
+            .classId(entity.getId())
+            .name(entity.getName())
+            .description(entity.getDescription())
+            .createdAt(entity.getCreatedAt())
+            .active(entity.getActive())
+            .students(entity.getStudents().stream().map(this::studentEntityToResp).toList())
+            .lessons(entity.getLessons().stream().map(this::lessonEntityToResp).toList())
+            .build();
     }
 
     private StudentResp studentEntityToResp(Student student) {
