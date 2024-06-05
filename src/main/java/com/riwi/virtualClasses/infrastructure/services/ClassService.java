@@ -2,7 +2,11 @@ package com.riwi.virtualClasses.infrastructure.services;
 
 import com.riwi.virtualClasses.api.dto.request.ClassReq;
 import com.riwi.virtualClasses.api.dto.response.ClassResp;
+import com.riwi.virtualClasses.api.dto.response.LessonResp;
+import com.riwi.virtualClasses.api.dto.response.StudentResp;
 import com.riwi.virtualClasses.domain.entities.Class;
+import com.riwi.virtualClasses.domain.entities.Lesson;
+import com.riwi.virtualClasses.domain.entities.Student;
 import com.riwi.virtualClasses.domain.repositories.ClassRepository;
 import com.riwi.virtualClasses.infrastructure.abstract_services.IClassService;
 import com.riwi.virtualClasses.utils.enums.SortType;
@@ -39,7 +43,7 @@ public class ClassService implements IClassService {
     }
 
     @Override
-    public Page<ClassResp> getAll(int page, int size, SortType sortType) {
+    public Page<ClassResp> getAll(int page, int size, SortType sortType, String name, String description) {
         if (page < 0) page = 0;
 
         PageRequest pagination = switch (sortType) {
@@ -48,17 +52,50 @@ public class ClassService implements IClassService {
             case DESC -> PageRequest.of(page, size, Sort.by(FIELD_BY_SORT).descending());
         };
 
-        return this.classRepository.findAll(pagination).map(this::entityToResp);
+        Page<Class> classPage;
+        if ((name == null || name.isEmpty()) && (description == null || description.isEmpty())) {
+            classPage = classRepository.findByActiveTrue(pagination);
+        } else {
+            classPage = classRepository.findByNameContainingAndActiveTrueOrDescriptionContainingAndActiveTrue(
+                    name != null ? name : "",
+                    description != null ? description : "",
+                    pagination
+            );
+        }
+
+        return classPage.map(this::entityToResp);
     }
 
-
     private ClassResp entityToResp(Class entity) {
+        // Implementar la conversión de entity a ClassResp
         return ClassResp.builder()
                 .classId(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .active(entity.getActive())
                 .createdAt(entity.getCreatedAt())
+                .active(entity.getActive())
+                .students(entity.getStudents().stream().map(this::studentEntityToResp).toList())
+                .lessons(entity.getLessons().stream().map(this::lessonEntityToResp).toList())
+                .build();
+    }
+
+    private StudentResp studentEntityToResp(Student student) {
+        return StudentResp.builder()
+                .studentId(student.getId())
+                .name(student.getName())
+                .email(student.getEmail())
+                .createdAt(student.getCreatedAt())
+                .active(student.getActive())
+                .build();
+    }
+
+    private LessonResp lessonEntityToResp(Lesson lesson) {
+        return LessonResp.builder()
+                .lessonId(lesson.getId())
+                .title(lesson.getTitle())
+                .content(lesson.getContent())
+                .createdAt(lesson.getCreatedAt())
+                .active(lesson.getActive())
                 .build();
     }
 
@@ -71,9 +108,17 @@ public class ClassService implements IClassService {
                 .build();
     }
 
+    
+
     private Class find(Long id) {
         return this.classRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("No class found with the supplied ID"));
+    }
+
+    @Override
+    public Page<ClassResp> getAll(int page, int size, SortType sort) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
