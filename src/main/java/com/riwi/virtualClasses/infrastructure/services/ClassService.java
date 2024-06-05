@@ -29,7 +29,11 @@ public class ClassService implements IClassService {
     @Autowired
     private final ClassRepository classRepository;
 
- 
+
+    @Override
+    public ClassResp get(Long id) {
+        return this.entityToResp(this.find(id));
+    }
 
     @Override
     public Page<ClassResp> getAll(int page, int size, SortType sortType) {

@@ -8,5 +8,4 @@ public interface IClassService extends CrudService<ClassReq, ClassResp, Long>{
 
     public String FIELD_BY_SORT = "ClassName";
 
-    public 
 }
