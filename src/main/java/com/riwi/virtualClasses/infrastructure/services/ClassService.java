@@ -29,6 +29,11 @@ public class ClassService implements IClassService {
     @Autowired
     private final ClassRepository classRepository;
 
+    @Override
+    public ClassResp create(ClassReq request) {
+        Class newClass = this.requestToEntity(request);
+        return this.entityToResp(this.classRepository.save(newClass));
+    }
 
     @Override
     public ClassResp get(Long id) {
