@@ -34,7 +34,12 @@ public class LessonService implements ILessonService {
         return this.entityToResp(this.lessonRepository.save(newLesson));
     }
 
-   
+    @Override
+    public void delete(Long id) {
+        Lesson lesson = this.find(id);
+        lesson.setActive(false);
+        this.lessonRepository.save(lesson);
+    }
 
     private LessonResp entityToResp(Lesson entity) {
         return LessonResp.builder()
@@ -59,6 +64,9 @@ public class LessonService implements ILessonService {
                 .build();
     }
 
-
+    private Lesson find(Long id) {
+        return this.lessonRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("No lesson found with the supplied ID"));
+    }
 }
 

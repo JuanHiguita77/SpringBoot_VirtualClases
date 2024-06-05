@@ -33,5 +33,13 @@ public class LessonController {
         return ResponseEntity.ok(this.lessonService.create(request));
     }
 
+
+    @Operation(summary = "Disable a lesson", description = "Endpoint to disable a lesson by ID")
+    @ApiResponse(responseCode = "400", description = "Invalid lesson ID", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResp.class)))
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> disableLesson(@PathVariable("id") Long lessonId) {
+        this.lessonService.disable(lessonId);
+        return ResponseEntity.noContent().build();
+    }
 }
 
