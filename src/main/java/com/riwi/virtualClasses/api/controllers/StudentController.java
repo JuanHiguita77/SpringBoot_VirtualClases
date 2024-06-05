@@ -24,8 +24,13 @@ public class StudentController {
         if (name != null && !name.isEmpty()) {
             return this.studentService.searchByName(name, page, size);
         }
-
+        
         return studentService.getAll(page, size, sort != null ? sort : SortType.NONE);
+    }
+
+    @GetMapping("/{id}")
+    public StudentResp get(@PathVariable Long id) {
+        return this.studentService.get(id);
     }
 
 
