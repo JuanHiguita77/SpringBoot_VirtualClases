@@ -1,8 +1,6 @@
 package com.riwi.virtualClasses.infrastructure.services;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.riwi.virtualClasses.api.dto.request.StudentReq;
 import com.riwi.virtualClasses.api.dto.response.StudentResp;
+import com.riwi.virtualClasses.domain.entities.Class;
 import com.riwi.virtualClasses.domain.entities.Student;
 import com.riwi.virtualClasses.domain.repositories.StudentRepository;
 import com.riwi.virtualClasses.domain.repositories.ClassRepository;
@@ -90,13 +89,13 @@ public class StudentService implements IStudentService {
     }
 
     private Student requestToEntity(StudentReq studentReq) {
-        Class class = this.classRepository.findById(studentReq.getClassId()).orElseThrow(() -> new BadRequestException("No student found with the supplied ID"));;
+        Class classEntity = this.classRepository.findById(studentReq.getClassId()).orElseThrow(() -> new BadRequestException("No student found with the supplied ID"));;
 
         return Student.builder()
                 .name(studentReq.getName())
                 .email(studentReq.getEmail())
                 .active(true)
-                .class(class)
+                .classEntity(classEntity)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
