@@ -21,12 +21,13 @@ public class StudentController {
     private IStudentService studentService;
 
     @GetMapping
-    public ResponseEntity<Page<StudentResp>> getAll(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) SortType sort, @RequestParam(required = false) String name) {
-        if (name != null && !name.isEmpty()) {
-            return ResponseEntity.ok(this.studentService.searchByName(name, page, size));
-        }
-        
-        return ResponseEntity.ok(studentService.getAll(page, size, sort != null ? sort : SortType.NONE));
+    public ResponseEntity<Page<StudentResp>> getAll(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) SortType sort,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description) {
+        return ResponseEntity.ok(studentService.getAll(name, description, page, size, sort != null ? sort : SortType.NONE));
     }
 
     @GetMapping("/{id}")

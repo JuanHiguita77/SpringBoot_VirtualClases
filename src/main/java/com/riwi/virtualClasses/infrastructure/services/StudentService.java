@@ -60,7 +60,7 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public Page<StudentResp> getAll(int page, int size, SortType sortType) {
+    public Page<StudentResp> getAll(String name, String description, int page, int size, SortType sortType) {
         if (page < 0) page = 0;
 
         PageRequest pagination = switch (sortType) {
@@ -69,12 +69,14 @@ public class StudentService implements IStudentService {
             case DESC -> PageRequest.of(page, size, Sort.by(FIELD_BY_SORT).descending());
         };
 
-        return this.studentRepository.findAll(pagination).map(this::entityToResp);
-    }
+        Page<Student> studentPage;
+        if ((name == null || name.isBlank()) && (description == null || description.isBlank())) {
+            studentPage = studentRepository.findByActiveTrue(pagination);
+        } else {
+            studentPage = studentRepository.findByNameContainingAndActiveTrueOrDescriptionContainingAndActiveTrue(name, description, pagination);
+        }
 
-    public Page<StudentResp> searchByName(String name, int page, int size) {
-        PageRequest pagination = PageRequest.of(page, size, Sort.by(FIELD_BY_SORT));
-        return this.studentRepository.findByNameContainingAndActiveTrue(name, pagination).map(this::entityToResp);
+        return studentPage.map(this::entityToResp);    
     }
 
     private StudentResp entityToResp(Student entity) {
@@ -89,7 +91,7 @@ public class StudentService implements IStudentService {
     }
 
     private Student requestToEntity(StudentReq studentReq) {
-        Class classEntity = this.classRepository.findById(studentReq.getClassId()).orElseThrow(() -> new BadRequestException("No student found with the supplied ID"));;
+        Class classEntity = this.classRepository.findById(studentReq.getClassId()).orElseThrow(() -> new BadRequestException("No class found with the supplied ID"));;
 
         return Student.builder()
                 .name(studentReq.getName())
@@ -103,6 +105,12 @@ public class StudentService implements IStudentService {
     private Student find(Long id) {
         return this.studentRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("No student found with the supplied ID"));
+    }
+
+    @Override
+    public Page<StudentResp> getAll(int page, int size, SortType sort) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
 
