@@ -16,7 +16,9 @@ public class MultimediaReq {
     private String type;
 
     private String url;
+
     @NotNull
     private Long lessonId;
+    
     private Boolean active;
 }
