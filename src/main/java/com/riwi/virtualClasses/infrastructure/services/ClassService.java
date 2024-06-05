@@ -17,8 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +27,11 @@ public class ClassService implements IClassService {
     @Autowired
     private final ClassRepository classRepository;
 
+    @Override
+    public ClassResp create(ClassReq request) {
+        Class newClass = this.requestToEntity(request);
+        return this.entityToResp(this.classRepository.save(newClass));
+    }
 
     @Override
     public ClassResp get(Long id) {
@@ -71,6 +74,18 @@ public class ClassService implements IClassService {
     private Class find(Long id) {
         return this.classRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("No class found with the supplied ID"));
+    }
+
+    @Override
+    public void delete(Long id) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public ClassResp update(ClassReq request, Long id) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

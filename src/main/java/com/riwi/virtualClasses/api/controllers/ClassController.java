@@ -19,11 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Tag(name = "Classes")
 @RestController
-@RequestMapping("/api/v1/class")
+@RequestMapping("/class")
 @AllArgsConstructor
 public class ClassController {
 
@@ -44,6 +42,13 @@ public class ClassController {
     @GetMapping("/{id}")
     public ResponseEntity<ClassResp> getClassInfo(@PathVariable("id") Long classId) {
         return ResponseEntity.ok(this.classService.get(classId));
+    }
+
+    @Operation(summary = "Create a new class", description = "Endpoint to create a new class")
+    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResp.class)))
+    @PostMapping
+    public ResponseEntity<ClassResp> createClass(@Validated @RequestBody ClassReq request) {
+        return ResponseEntity.ok(this.classService.create(request));
     }
 }
 
