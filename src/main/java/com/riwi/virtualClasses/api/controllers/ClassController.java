@@ -39,6 +39,11 @@ public class ClassController {
         return ResponseEntity.ok(this.classService.getAll(page, size, sortype));
     }
 
-    
+    @Operation(summary = "Get class information", description = "Endpoint to get detailed information of a specific class by ID")
+    @ApiResponse(responseCode = "400", description = "Invalid class ID", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResp.class)))
+    @GetMapping("/{id}")
+    public ResponseEntity<ClassResp> getClassInfo(@PathVariable("id") Long classId) {
+        return ResponseEntity.ok(this.classService.get(classId));
+    }
 }
 
