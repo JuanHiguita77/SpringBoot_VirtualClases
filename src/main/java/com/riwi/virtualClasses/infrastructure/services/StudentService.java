@@ -33,7 +33,17 @@ public class StudentService implements IStudentService {
     @Autowired
     private final ClassRepository classRepository;
 
-   
+
+
+    @Override
+    public StudentResp get(Long id) {
+        return this.entityToResp(this.find(id));
+    }
+
+
+
+  
+
     @Override
     public Page<StudentResp> getAll(int page, int size, SortType sortType) {
         if (page < 0) page = 0;
@@ -47,6 +57,11 @@ public class StudentService implements IStudentService {
         return this.studentRepository.findAll(pagination).map(this::entityToResp);
     }
 
+    @Override
+    public Page<StudentResp> searchByName(String name, int page, int size) {
+        PageRequest pagination = PageRequest.of(page, size, Sort.by(FIELD_BY_SORT));
+        return this.studentRepository.findByNameContainingAndActiveTrue(name, pagination).map(this::entityToResp);
+    }
 
     private StudentResp entityToResp(Student entity) {
         return StudentResp.builder()
