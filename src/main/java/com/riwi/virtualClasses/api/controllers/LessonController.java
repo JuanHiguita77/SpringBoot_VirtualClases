@@ -27,7 +27,7 @@ public class LessonController {
     private final ILessonService lessonService;
 
     @Operation(summary = "Create a new lesson", description = "Endpoint to create a new lesson")
-    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResp.class)))
+    @ApiResponse(responseCode = "400", description = "Invalid input --- VIDEO, AUDIO, DOCUMENT", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorsResp.class)))
     @PostMapping
     public ResponseEntity<LessonResp> createLesson(@Validated @RequestBody LessonReq request) {
         return ResponseEntity.ok(this.lessonService.create(request));

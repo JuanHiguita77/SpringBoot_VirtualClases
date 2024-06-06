@@ -37,8 +37,13 @@ public class LessonService implements ILessonService {
     @Autowired
     private final MultimediaRepository multimediaRepository;
 
+    private static final List<String> VALID_MULTIMEDIA_TYPES = List.of("VIDEO", "AUDIO", "DOCUMENT");
+
     @Override
     public LessonResp create(LessonReq request) {
+
+        validateMultimediaTypes(request.getMultimediaList());
+
         Lesson initialLesson = this.requestToEntity(request);
         Lesson savedLesson = this.lessonRepository.save(initialLesson);
 
@@ -72,7 +77,7 @@ public class LessonService implements ILessonService {
 
     private LessonResp entityToResp(Lesson entity) {
         List<MultimediaResp> multimediaList = entity.getMultimediaList().stream()
-                .map(this::entityToResp)
+                .map(this::entityToMediaResp)
                 .collect(Collectors.toList());
 
         return LessonResp.builder()
@@ -86,7 +91,7 @@ public class LessonService implements ILessonService {
                 .build();   
     }
 
-    private MultimediaResp entityToResp(Multimedia entity) {
+    private MultimediaResp entityToMediaResp(Multimedia entity) {
         return MultimediaResp.builder()
                 .multimediaId(entity.getId())
                 .type(entity.getType())
@@ -111,6 +116,10 @@ public class LessonService implements ILessonService {
     }
 
     private Multimedia requestToEntity(MultimediaReq multimediaReq, Lesson lesson) {
+        if (!VALID_MULTIMEDIA_TYPES.contains(multimediaReq.getType().toUpperCase())) {
+            throw new BadRequestException("Invalid multimedia type: " + multimediaReq.getType());
+        }
+
         return Multimedia.builder()
                 .type(multimediaReq.getType())
                 .url(multimediaReq.getUrl())
@@ -118,6 +127,15 @@ public class LessonService implements ILessonService {
                 .lesson(lesson)
                 .createdAt(LocalDateTime.now())
                 .build();
+    }
+
+    private void validateMultimediaTypes(List<MultimediaReq> multimediaList) {
+        for (MultimediaReq multimediaReq : multimediaList) {
+            if (!VALID_MULTIMEDIA_TYPES.contains(multimediaReq.getType().toUpperCase())) {
+                throw new BadRequestException("Invalid multimedia type: Accepted VIDEO, AUDIO, DOCUMENT" + multimediaReq.getType());
+                
+            }
+        }
     }
 
     private Lesson find(Long id) {

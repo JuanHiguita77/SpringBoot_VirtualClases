@@ -1,5 +1,6 @@
 package com.riwi.virtualClasses.api.dto.request;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ public class MultimediaReq {
     @NotBlank
     private String type;
 
+    @NotBlank
     private String url;
 
     @NotNull

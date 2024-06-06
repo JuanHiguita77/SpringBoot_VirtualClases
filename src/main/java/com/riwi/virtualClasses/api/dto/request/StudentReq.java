@@ -23,5 +23,7 @@ public class StudentReq {
 
     @NotNull
     private Long classId;
+
+    @NotNull
     private Boolean active;
 }

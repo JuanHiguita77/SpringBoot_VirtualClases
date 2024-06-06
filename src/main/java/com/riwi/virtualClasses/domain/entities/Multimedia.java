@@ -27,8 +27,13 @@ public class Multimedia {
     @Column(nullable = false)
     private String type;
 
+    @Column(nullable = false)
     private String url;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
     private Boolean active;
 
     @ManyToOne

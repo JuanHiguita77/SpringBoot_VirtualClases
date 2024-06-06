@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -84,7 +85,7 @@ public class ClassService implements IClassService {
             .description(entity.getDescription())
             .createdAt(entity.getCreatedAt())
             .active(entity.getActive())
-            .students(entity.getStudents() != null ? entity.getStudents().stream().map(this::studentEntityToResp).toList() : List.of())
+            .students(entity.getStudents() != null ? entity.getStudents().stream().map(this::studentEntityToResp).collect(Collectors.toList()) :  List.of())
             .build();
     }
 
@@ -107,6 +108,7 @@ public class ClassService implements IClassService {
                 .email(student.getEmail())
                 .createdAt(student.getCreatedAt())
                 .active(student.getActive())
+                .classId(student.getClassEntity().getId())
                 .build();
     }
 

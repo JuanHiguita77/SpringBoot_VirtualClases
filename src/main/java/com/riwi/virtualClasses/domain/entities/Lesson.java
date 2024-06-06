@@ -32,8 +32,13 @@ public class Lesson {
     @Column(length = 255, nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
     private Boolean active;
 
     @ManyToOne

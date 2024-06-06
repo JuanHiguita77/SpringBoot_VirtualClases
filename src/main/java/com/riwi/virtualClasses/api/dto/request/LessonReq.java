@@ -19,11 +19,13 @@ public class LessonReq {
     @Size(max = 255)
     private String title;
 
+    @NotBlank
     private String content;
 
     @NotNull
     private Long classId;
     
+    @NotNull
     private Boolean active;
 
     @NotNull
